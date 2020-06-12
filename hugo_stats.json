@@ -26,7 +26,6 @@
       "nav",
       "p",
       "pre",
-      "script",
       "span",
       "strong",
       "style",
@@ -55,7 +54,6 @@
       "ulist"
     ],
     "ids": [
-      "_context_goal",
       "_hardware",
       "_hardware_2",
       "_hardware_3",
