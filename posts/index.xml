@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on NokiDev&#39;s blog</title>
-    <link>https://nokidev.github.io/blog/posts/</link>
+    <link>https://blog-gh.noki.fr/posts/</link>
     <description>Recent content in Posts on NokiDev&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 12 Jun 2020 17:41:23 +0200</lastBuildDate>
     
-	<atom:link href="https://nokidev.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog-gh.noki.fr/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Orange DNS and accessing services on local network with Domain name</title>
-      <link>https://nokidev.github.io/blog/posts/orange_dns_and_accessing_external_services/</link>
+      <link>https://blog-gh.noki.fr/posts/orange_dns_and_accessing_external_services/</link>
       <pubDate>Fri, 12 Jun 2020 17:41:23 +0200</pubDate>
       
-      <guid>https://nokidev.github.io/blog/posts/orange_dns_and_accessing_external_services/</guid>
+      <guid>https://blog-gh.noki.fr/posts/orange_dns_and_accessing_external_services/</guid>
       <description>When setting up my homelab, I encountered a pretty weird issue related to my Internet Provider Router box.
  Using the same address for accessing my website on local network and external network. This is to simplify and configure services with external http addresses rather than local one. Because external ones probably wont change that much over time. And if I use a laptop both in and out I prefer my bookmarks to remain the same</description>
     </item>
