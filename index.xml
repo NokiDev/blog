@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>NokiDev&#39;s blog</title>
+    <link>https://blog@noki.fr/</link>
+    <description>Recent content on NokiDev&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 12 Jun 2020 17:41:23 +0200</lastBuildDate>
+    
+	<atom:link href="https://blog@noki.fr/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Orange DNS and accessing services on local network with Domain name</title>
+      <link>https://blog@noki.fr/posts/orange_dns_and_accessing_external_services/</link>
+      <pubDate>Fri, 12 Jun 2020 17:41:23 +0200</pubDate>
+      
+      <guid>https://blog@noki.fr/posts/orange_dns_and_accessing_external_services/</guid>
+      <description>When setting up my homelab, I encountered a pretty weird issue related to my Internet Provider Router box.
+ Using the same address for accessing my website on local network and external network. This is to simplify and configure services with external http addresses rather than local one. Because external ones probably wont change that much over time. And if I use a laptop both in and out I prefer my bookmarks to remain the same</description>
+    </item>
+    
+    <item>
+      <title>HomeLab infrastructure</title>
+      <link>https://blog@noki.fr/about/infrastructure/</link>
+      <pubDate>Mon, 08 Jun 2020 00:56:06 +0200</pubDate>
+      
+      <guid>https://blog@noki.fr/about/infrastructure/</guid>
+      <description>Table of Contents Overview My babies PiProxy NASGull HTPC Services deployed Related blog posts.     This describe the current state of my home infrastructure. I&amp;#8217;ll go through a short description of my machines first and then with an overview, and finally with a list of all services I host.
+ In this page, I&amp;#8217;ll reference a few blog post related, to specific services or setup.
+ NB: If you want an history of the infrastructure take a look to the git repository and changes of this file over time.</description>
+    </item>
+    
+    <item>
+      <title>Some words about myself</title>
+      <link>https://blog@noki.fr/about/me/</link>
+      <pubDate>Mon, 08 Jun 2020 00:56:06 +0200</pubDate>
+      
+      <guid>https://blog@noki.fr/about/me/</guid>
+      <description>Hello 
+ I am a french developper, living in France too. I&amp;#8217;m currently working in the medical industry as C++ Software Engineer, and more recently working on CI/CD, and server administration trying to instaurate the DevOps culture in my company.
+ I&amp;#8217;m really passionate about computer science and all the domains that cross it. Like CyberSecurity, Server administration, software developement, a bit of hardware and IOTs.
+   Why this blog ?</description>
+    </item>
+    
+  </channel>
+</rss>
