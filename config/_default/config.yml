@@ -1,0 +1,107 @@
+baseURL: "http://localhost:1313"
+languageCode: "en-us"
+languageName: "English"
+title: "NokiDev's blog"
+titleCaseStyle: "AP"
+DefaultContentLanguage: en
+DefaultContentLanguageInSubdir: true
+
+enableRobotsTXT: true
+
+theme: smol
+
+log: true
+build: 
+  useResourceCacheWhen: fallback
+  writeStats: true # Only for prod.
+  
+buildFuture: true
+buildExpired: true
+buildDrafts: true
+preserveTaxonomyNames: true
+
+
+params:
+
+    mainSections: 
+       - posts
+
+    # Urls for social networks
+    facebook: ""
+    twitter: "https://twitter.com/NokiDev"
+    linkedin: ""
+    github: "https://github.com/NokiDev"
+    gitlab: "https://gitlab.com/NokiDev"
+
+    # Enables or disables the loading animations. false activates them. Default is false.
+    loadfastload: true
+
+    # Sets the speed for the page loading effect. Default is 1.0.
+    loadspeedfactor: 1.0
+
+    # Enables or disables the second flyby cursor. Default is false.
+    loadonepass: false
+
+menu:
+  # This displays buttons in the navbar to access your contents
+  main:
+    - identifier: "about" # An unique identifier for the button
+      name: "About"       # A display name for the button
+      url: "/about/"      # The path to the content. It can lead to a single page (like here)
+      weight: 1           # A number to order the buttons in the navbar
+    - identifier: "posts"
+      name: "All posts"
+      url: "/posts/"       # The path can lead to a content folder too.
+      weight: 2
+    - identifier: "categories"
+      name: "Categories"
+      url: "/categories/"
+      weight: 20 
+    - identifier: "tags"
+      name: "Tags"
+      url: "/tags/"
+      weight: 30
+
+  footer:
+    - name: "Github"
+      url: "https://github.com/NokiDev"
+      weight: 1 
+
+    - name: "Gitlab"
+      url: "https://gitlab.com/NokiDev"
+      weight: 2 
+
+    - name: "Twitter"
+      url: "https://twitter.com/NokiDev"
+      weight: 3
+
+
+taxonomies:
+  category: "categories"
+  tag: "tags"
+
+
+privacy:
+  vimeo:
+    disabled: true
+    simple: true
+
+  twitter:
+    disabled: false
+    enableDNT: true
+    simple: true
+
+  instagram:
+    disabled: true
+    simple: true
+
+  youtube:
+    disabled: false
+    privacyEnhanced: true
+
+services:
+  instagram:
+    disableInlineCSS: true
+
+  twitter:
+    disableInlineCSS: true

@@ -1,0 +1,21 @@
+baseURL: "localhost:1313"
+languageCode: "en-us"
+languageName: "English"
+title: "NokiDev's blog."
+titleCaseStyle: "AP"
+DefaultContentLanguage: en
+DefaultContentLanguageInSubdir: true
+
+enableRobotsTXT: true
+enableMissingTranslationPlaceholders: true
+
+enableEmoji: true
+
+log: true
+build: 
+  useResourceCacheWhen: fallback
+  writeStats: true # Only for prod.
+  
+buildFuture: true
+buildExpired: true
+buildDrafts: true
