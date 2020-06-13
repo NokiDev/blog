@@ -1,0 +1,321 @@
+---
+title: "Securing traefik installation"
+date: 2020-06-13T01:14:20+02:00
+draft: true
+---
+:toc:
+
+In this article we will see how to configure traefik to use https and configure middlewares for having a quite good security rank on https://www.ssllabs.com/test[SSLLabs]. This is mandatory if you plan to exposes your services on the Internet.
+
+This article directly follows link:/posts/using_traefik_2.2_reverse_proxy_for_selfhosting[Using traefik for deploying your first service] and will use docker-compose file definitions we used back then.
+
+.For this article we will need a few things
+* A domain name
+* Port 80/443 open on your router
+* Router configured to forward traffic on port 80/443 to your machine hosting traefik on port exposed in dockerfile (80/443 for simplicity)
+
+Let's dig in !
+
+== Secured connection a.k.a HTTPS
+
+Secured connection is done using https protocol, this protocol uses certifates signed, by a certifcate authority. 
+Before 2016 thoose certificates had to be bought separately from the domain name they protect, and were pretty expansive and not specially accessible for individuals.
+
+"Recently" an open certificate authority emerged, to promote security among the web. They solved a big issue by allowing automatic certificate generation for a particular domain.
+It works by solving challenges to prove that we are the owners of this domain name.
+This entity is called https://letsencrypt.org/[Let's encrypt].
+
+.There is multiple kind of challenges, you can solve depending on what you want.
+* tlsChallenge, by accessing the certificate requester on port 443 (secured)
+* httpChallenge, by accessing the certificate requester on port 80 (less secured)
+* dnsChallenge, by verifying keys from DNS records. (require automation on your domain name provider side)
+
+In my case I'm using the dnsChallenge, because it allows to create wildcard certificates such as *.noki.fr and secure every subdomains of noki.fr.
+Since the dnsChallenge depends on your provider, we won't use it in this article, but I sugest you to take a look. (I'm using OVH provider btw)
+
+Having certificates is already a major step in securing our services but it won't suffice we need to ensure we're not supporting deprecated TLS version, and won't be attacked on known failure on the security layer.
+
+e.g Few years ago, a security failure was found in OpenSSL protocol, and called Heartbleed. This failure was a bug in OpenSSL, and allowed an attacker, to buffer overflow the server, and exploring is memory to retrieve signing private keys.
+
+There is also a good number of weakness in some version of TLS, that we need to fix before deploying our services.
+This will be tested by a tool provided, by SSLLabs.
+
+=== Let's Encrypt Certificates
+
+Set up let's encrypt certificates with traefik is a fairly easy task. Traefik has builtin support of Let's Encrypt certificate retrieval, and renewal. This is very great because configuring it with cert-bot (tool provided by let's encrypt) can be time consuming, and complexe to setup at the OS level by defining cron jobs and scripts to parse certificates and Validity over time.
+
+First we need to add a new entrypoint for our https connections.
+This is done by editing traefik main configuration, and adding the web-secure entrypoint.
+Like so :
+
+```yaml
+entrypoints:
+  web:
+    address: ":80"
+
+  web-secure:
+    address: ":443"
+```
+
+Now that we have another entrypoint, for https connection, we can add a certificate resolver.
+The certificate resolvers that we are going to add, are let's encrypt ones. But you can also provide your own self-signed certificates.
+
+Still in the static configuration adds the following sections :
+
+```yaml
+serversTransport:
+  insecureskipverify: true
+
+certificatesresolvers:
+ # example for httpChallenge.
+  httpChal: # The name is arbitrary.
+    acme:
+      email: YOUR_EMAIL
+      storage: /certs/acme.json # match the volume defined in docker-compose.yml
+      # CAServer is set to staging because let's encrypt apply a request rate limit, and you would ban yourself if testing with the prod url. The default value is the prod server, so comment it out when you're ready
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      httpChallenge: 
+        entrypoint: web # name of the http entrypoint
+  # exemple for tlsChallenge
+  tlsChal:
+    acme:
+      email: YOUR_EMAIL
+      storage: /certs/acme.json
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      tlsChallenge: {}
+```
+
+The first section `serversTransport.insecureskipverify` is needed temporarly, if you want traefik to accept self signed certificates. This situation is likely to happen while we are tweaking configuration, feel free to set it to false when everything works great.
+
+The second section, are https://docs.traefik.io/v2.2/https/acme/#the-different-acme-challenges
+[certificateresolvers], that will be used later, when configuring our service, to tell traefik how it should retrieve https certificates.
+Here we added two resolvers to present common possibilities. (it misses the dns one tough)
+
+Okay so we have traefik configured for certificate retrieval from let's encrypt. Let's update our docker services.
+
+traefik docker-compose.yml
+```yaml
+version: '3.7'
+
+networks:
+  proxy:
+    external: true
+
+services:
+  traefik:
+    image: traefik:v2.2.1
+    restart: unless-stopped
+    container_name: traefik
+    ports:
+      - 0.0.0.0:8888:80
+      - 127.0.0.1:8080:8080
+      - 0.0.0.0:443:443
+    environment:
+      TZ: "Europe/Paris" # Setting Timezone.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Needed to allow traefik access docker api.
+      - /etc/localtime:/etc/localtime:ro # Sharing time with host OS as read only (ro).
+      - ./config.yml:/etc/traefik/traefik.yml
+
+      - ./certs:/certs ## For storing certificates.
+    networks:
+      - traefik
+```
+
+We didn't added much to the file, only a new volume for storing certificates on the host, and a port exposure for 443 (https port) 
+Note, that I also changed binding address from 127.0.0.1 to 0.0.0.0 to make the container accepts requests comming from all addresses and not only localhost.
+
+projectsend docker-compose.yml
+```yaml
+version: "3.7"
+
+networks:
+  proxy:
+    external: true
+
+services:
+  projectsend:
+    image: linuxserver/projectsend
+    restart: unless-stopped
+    container_name: projectsend
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Paris
+      MAX_UPLOAD: 5000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro # Sharing time with host OS as read only (ro).
+      - ./config:/config
+      - ./data:/data
+    ports:
+      - 9999:80
+    networks:
+      - proxy
+    labels:
+      traefik.enable: true
+      traefik.http.routers.projectsend.entrypoints: web,web-secured
+      traefik.http.routers.projectsend.rule: Host(`send.domain.tld`)
+      traefik.http.routers.projectsend.tls.certresolver: httpChal
+      traefik.http.routers.projectsend.tls.domains.domain1.main: send.domain.tld
+      traefik.http.services.projectsend.loadbalancer.server.port: 80
+```
+
+.For project send we made some additions to the labels used.
+* The router entrypoints is now the https one.
+* We added a forward rule to the router, it tells traefik that only requests for `send.domain.tld` will get through
+* We precised the certresolver that would be used, for this domain
+* And we precise the domain name that will be associated to the certificate.
+
+Other option regarding TLS can be found https://docs.traefik.io/v2.0/routing/routers/#tls[here]
+
+I think we are good for a first test. 
+Recreate the containers by running `docker-compose up -d` for both projects. (docker-compose up will recreate the container if changes have been made to service definitions)
+
+Try to access https://send.domain.tld  you should be warned that the certificate is self signed, but this is normal since we used staging server for let's encrypt.
+
+If that's not the case, then take a look to traefik logs by running `docker-compose logs`.
+
+If everything worked out, we can comment caserver in traefik main configuration and recreate the container. This time by destroying it explicitely
+
+`docker-compose stop traefik`,
+`docker-compose rm traefik` and `docker-compose up -d`
+
+Now let's make a test on SSL labs for our service send.domain.tld.
+It should not be very good... Even it would say that your services support vulnerable protocols. Let's remediate about it.
+
+=== Get a A rank on SSL Labs
+
+Traefik allows to customize, TLS options that will be used when establishing secured connections.
+This is done with dynamic configuration.
+As dynamic configuration say, we can define everything in docker labels. As this is fine when you have 1 or 2 services, but when you have a lot of them you're going te define tls options everywhere. It is counter productive and makes docker-compose file longer.
+
+As I said earlier, I'm lazy and fortunately traefik gives a way to create dynamic configuration in files.
+
+==== Using file provider for shared configuration
+
+In addition to tls options we are going to define a few common middlewares containing great defaults. Middlewares are attached to routers and operate on in/out requests to add information about the request, forward, reject etc... 
+
+===== Middlewares
+
+Let's create a directory dynamic_configuration and create a common_middlewares.yml file in it with the following content :
+
+```yaml
+http:
+  middlewares:
+    secured:
+      chain:
+        middlewares:
+          - https_redirect
+          - secured_headers
+
+    https_redirect:
+      redirectScheme:
+        permanent: true
+        scheme: https
+
+    secured_headers:
+      headers:
+        sslRedirect: true
+        sslHost: use_https_for_god_sake.domain.tld
+        sslProxyHeaders:
+          X-Forwarded-Proto: https
+        stsSeconds: 15552000
+        stsPreload: true
+        stsIncludeSubdomains: true
+        forceSTSHeader: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: 'origin-when-cross-origin'
+        customFrameOptionsValue: 'SAMEORIGIN'
+```
+
+Here we add 3 middlewares.
+The first one is a "chain" and simply unify the two other middlewares under the same name.
+The second, define a redirection to https when accessing, the service with http.
+And the third, defines several headers, used to ensure you're using https, and some good defaults for http requests security.
+
+(To note, with traefik 2.2 https redirection can be done on the entrypoint level rather than using a middleware )
+
+===== Good TLS options
+
+We can now customize tls options.
+Create another file in the dynamic_configuration directory for storing tls options tls_options.yml
+
+```yaml
+tls:
+  options:
+    default: # Default tls options will be used by defaults !
+      minVersion: VersionTLS12
+      sniStrict: true
+      cipherSuites:
+        - TLS_FALLBACK_SCSV # This ensure to try 
+# TLS 1.3
+        - TLS_CHACHA20_POLY1305_SHA256
+        - TLS_AES_256_GCM_SHA384
+        - TLS_AES_128_GCM_SHA256
+# TLS 1.2
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256  # This one is weak but required to allow communication with old IE versions and old Safari
+    strict:
+      minVersion: VersionTLS13
+      sniStric: true
+      cipherSuites:
+        - TLS_FALLBACK_SCSV
+        - TLS_CHACHA20_POLY1305_SHA256
+        - TLS_AES_256_GCM_SHA384
+```
+
+To use our new dynamic configurations we'll need to add a file provider in addition to the docker one.
+By editing traefik static configuration and adding 
+
+```yaml
+providers:
+  docker:
+    watch: true
+    network: proxy   
+    exposedByDefault: false
+  file:
+    directory: /file_configurations/
+    watch: true
+```
+
+Since Traefik 2.2 we can bind middleware to our entrypoints, we can also bind the certresolver if needed. So will make the change now.
+
+```yaml
+web-secure:
+  address: ":443"
+  http:
+    middlewares:
+      - "secured@file"
+    tls:
+      certResolver: httpChal
+      domains: 
+      - main: "domain.tld"
+        sans: 
+          - www.domain.tld
+```
+
+Notice the @provider syntax used here for specifying the middleware. 
+
+Finally we'll need to edit traefik's docker-compose.yml to add a new volume mapping
+`./dynamic_configuration:/file_configurations`
+
+And we can restart traefik
+
+In projectsend docker-compose we can now remove this line :      
+`traefik.http.routers.projectsend.tls.certresolver: httpChal` since it is now defaultly applied on the entrypoint web-secure.
+
+
+Let's Make SSLLab test again .... .... .... 
+
+It should be green with A or A+ score.
+
+That's all for this article, I hope you enjoyed it.
+
+Thanks you.
