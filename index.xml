@@ -6,10 +6,31 @@
     <description>Recent content on NokiDev&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 Jun 2020 17:41:23 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 13 Jun 2020 01:14:20 +0200</lastBuildDate>
     
 	<atom:link href="https://blog-gh.noki.fr/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Securing traefik installation</title>
+      <link>https://blog-gh.noki.fr/posts/securing_traefik_installation/</link>
+      <pubDate>Sat, 13 Jun 2020 01:14:20 +0200</pubDate>
+      
+      <guid>https://blog-gh.noki.fr/posts/securing_traefik_installation/</guid>
+      <description>Table of Contents Secured connection a.k.a HTTPS Let&amp;#8217;s Encrypt Certificates Get a A rank on SSL Labs     In this article we will see how to configure traefik to use https and configure middlewares for having a quite good security rank on SSLLabs. This is mandatory if you plan to exposes your services on the Internet.
+ This article directly follows Using traefik for deploying your first service and will use docker-compose file definitions we used back then.</description>
+    </item>
+    
+    <item>
+      <title>Using Traefik v2.2 to selfhost your first service.</title>
+      <link>https://blog-gh.noki.fr/posts/using_traefik_2.2_reverse_proxy_for_selfhosting/</link>
+      <pubDate>Fri, 12 Jun 2020 20:29:46 +0200</pubDate>
+      
+      <guid>https://blog-gh.noki.fr/posts/using_traefik_2.2_reverse_proxy_for_selfhosting/</guid>
+      <description>Traefik is a modern reverse proxy that integrates with container technologies and related orchestrators. In our case we&amp;#8217;re going to use it&amp;#8217;s docker integration. Traefik uses docker socket to retrieve information about running containers, and labels that are attached to it. (if you use docker inspect you would get the idea.)
+ This article require that you are already familiar with container thechnology and specialy docker.
+ Disclaimer: This article does not attend to secure your services it is pretty basic setup to start with traefik, if you want to secure your services head to this article</description>
+    </item>
     
     <item>
       <title>Orange DNS and accessing services on local network with Domain name</title>
