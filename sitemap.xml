@@ -23,11 +23,6 @@
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr/posts/traefik_article_series/03_using_traefik_and_authelia_to_secure_services_access/</loc>
-    <lastmod>2020-06-12T20:30:39+02:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://blog-gh.noki.fr/posts/traefik_article_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/</loc>
     <lastmod>2020-06-12T20:29:46+02:00</lastmod>
   </url>

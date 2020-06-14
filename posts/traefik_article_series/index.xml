@@ -23,16 +23,6 @@
     </item>
     
     <item>
-      <title>Using Traefik and authelia to protect your services</title>
-      <link>https://blog-gh.noki.fr/posts/traefik_article_series/03_using_traefik_and_authelia_to_secure_services_access/</link>
-      <pubDate>Fri, 12 Jun 2020 20:30:39 +0200</pubDate>
-      
-      <guid>https://blog-gh.noki.fr/posts/traefik_article_series/03_using_traefik_and_authelia_to_secure_services_access/</guid>
-      <description>Authelia is a great service, to help to protect your other services. I choose it because it has some nice features such as LDAP integration, TOTP, Yubikey and push notification support, it has been initiated by a french developper, and is written in go. (The last point is totally subjective but Go software tends to be good softwares.)
- I deployed it on my homelab for protecting services that doesn&amp;#8217;t provide any authentication, such as traefik dashboard or for services that don&amp;#8217;t provide ldap auth.</description>
-    </item>
-    
-    <item>
       <title>Using Traefik v2.2 to selfhost your first service.</title>
       <link>https://blog-gh.noki.fr/posts/traefik_article_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/</link>
       <pubDate>Fri, 12 Jun 2020 20:29:46 +0200</pubDate>
