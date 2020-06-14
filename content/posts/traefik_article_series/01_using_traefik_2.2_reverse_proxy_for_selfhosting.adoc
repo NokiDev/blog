@@ -8,11 +8,11 @@ Traefik is a modern reverse proxy that integrates with container technologies an
 In our case we're going to use it's docker integration.
 Traefik uses docker socket to retrieve information about running containers, and labels that are attached to it. (if you use docker inspect you would get the idea.)
 
-**This article require that you are already familiar with container thechnology and specialy docker.**
+**This article requires that you are already familiar with container thechnology and especially docker.**
 
-**Disclaimer: This article does not attend to secure your services it is pretty basic setup to start with traefik, if you want to secure your services head to this link:/posts/securing_traefik_installation[article] **
+**Disclaimer: This article is not meant to secure your services, it is a pretty basic setup to start with traefik, if you want to secure your services head to the link:{{< ref "02_securing_traefik_installation.adoc" >}}[next article] of this series **
 
-## Setting up traefik
+== Setting up traefik
 
 We'll use the following docker-compose.yml file :
 
@@ -41,7 +41,7 @@ services:
       - proxy
 ```
 
-As you may have notice there is a network called proxy that is referenced by this file. It is defined as external, because we want other services to use it too, and defining it external allow to create other services before actually deploy this docker-compose file. + if you use docker-compose rm it won't try to remove the network.
+As you may have notice there is a network called proxy that is referenced by this file. It is defined as external, because we want other services to use it too, and defining it external allow to create other services before actually deploying this docker-compose file. + if you use docker-compose rm it won't try to remove the network.
 
 To create the proxy network simply call `docker network create proxy`
 
@@ -75,7 +75,7 @@ entrypoints:
 
 Finally you can run traefik by running `docker-compose up -d` and check everything is running fine by going to the dashboard at localhost:8888 (or ip_of_the_machine:exposed_port)
 
-## Setting up our service 
+== Setting up our service 
 
 The services we're gonna setup is : projectSend. I choose it because it is very easy to setup and don't require any other external service to work.
 
@@ -132,10 +132,10 @@ And that's it. With such informations, traefik will be able to forward request c
 
 We can run `docker-compose up -d` and access projectsend from localhost:9999 and localhost:8888 which is traefik.
 
-So that's great you had use traefik to selfhost your first service ! 
+Congratulations you selfhost your first service using traefik ! 
 
 Before doing some crazy things and expose anything on the internet, you must add some security like HTTPS or secured http headers.
 
-You can find this in the next article of this series : A bit of security to your Traefik Installation
+You can find this in the next article of this series : link:{{< ref "02_securing_traefik_installation.adoc" >}}[Secure your Traefik Installation]
 
 I also sugest you to take a look at the documentation, and doing some experiments locally.

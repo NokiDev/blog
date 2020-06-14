@@ -3,9 +3,10 @@ title: "Securing traefik installation"
 date: 2020-06-13T01:14:20+02:00
 draft: true
 ---
-:toc:
+:source-highlighter: highlight.js
+:toc: macro
 
-In this article we will see how to configure traefik to use https and configure middlewares for having a quite good security rank on https://www.ssllabs.com/test[SSLLabs]. This is mandatory if you plan to exposes your services on the Internet.
+In this article we will see how to configure traefik to use https and configure middlewares for having a quite good security rank on https://www.ssllabs.com[SSLLabs]. This is mandatory if you plan to exposes your services on the Internet.
 
 This article directly follows link:/posts/using_traefik_2.2_reverse_proxy_for_selfhosting[Using traefik for deploying your first service] and will use docker-compose file definitions we used back then.
 
@@ -15,6 +16,8 @@ This article directly follows link:/posts/using_traefik_2.2_reverse_proxy_for_se
 * Router configured to forward traffic on port 80/443 to your machine hosting traefik on port exposed in dockerfile (80/443 for simplicity)
 
 Let's dig in !
+
+toc::[]
 
 == Secured connection a.k.a HTTPS
 
@@ -48,6 +51,11 @@ First we need to add a new entrypoint for our https connections.
 This is done by editing traefik main configuration, and adding the web-secure entrypoint.
 Like so :
 
+```js
+let t = "truc"
+```
+
+.config.yml
 ```yaml
 entrypoints:
   web:
