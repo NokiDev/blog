@@ -2,6 +2,8 @@
 title: "Securing traefik installation"
 date: 2020-06-13T01:14:20+02:00
 draft: true
+aliases:
+    - /posts/securing_traefik_installation
 ---
 :source-highlighter: highlight.js
 :toc: macro
@@ -50,10 +52,6 @@ Set up let's encrypt certificates with traefik is a fairly easy task. Traefik ha
 First we need to add a new entrypoint for our https connections.
 This is done by editing traefik main configuration, and adding the web-secure entrypoint.
 Like so :
-
-```js
-let t = "truc"
-```
 
 .config.yml
 ```yaml

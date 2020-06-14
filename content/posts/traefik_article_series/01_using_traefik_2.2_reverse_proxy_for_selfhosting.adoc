@@ -2,6 +2,8 @@
 title: "Using Traefik v2.2 to selfhost your first service."
 date: 2020-06-12T20:29:46+02:00
 draft: true
+aliases:
+  - /posts/using_traefik_2.2_reverse_proxy_for_selfhosting
 ---
 
 Traefik is a modern reverse proxy that integrates with container technologies and related orchestrators. 
