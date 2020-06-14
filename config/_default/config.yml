@@ -23,6 +23,10 @@ preserveTaxonomyNames: true
 menu:
   # This displays buttons in the navbar to access your contents
   main:
+    - identifier: "latest" # An unique identifier for the button
+      name: "Latest"       # A display name for the button
+      url: "/"      
+      weight: 2  
     - identifier: "about" # An unique identifier for the button
       name: "About"       # A display name for the button
       url: "/about/"      # The path to the content. It can lead to a single page (like here)
@@ -30,7 +34,7 @@ menu:
     - identifier: "posts"
       name: "All posts"
       url: "/posts/"       # The path can lead to a content folder too.
-      weight: 2
+      weight: 3
     - identifier: "categories"
       name: "Categories"
       url: "/categories/"
@@ -53,6 +57,11 @@ menu:
       url: "https://twitter.com/NokiDev"
       weight: 3
 
+params:
+  subtitle: "A Tech blog about infrastructure and development"
+  author: Timothé "NokiDev" Van Deputte
+  description: "Described with asciidoc, built with Hugo and hosted on Github."
+  repoUrl: https://github.com/NokiDev/blog
 
 taxonomies:
   category: "categories"
