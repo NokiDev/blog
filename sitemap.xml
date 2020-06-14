@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog-gh.noki.fr/posts/traefik_article_series/</loc>
+    <lastmod>2020-06-13T01:14:20+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog-gh.noki.fr/</loc>
     <lastmod>2020-06-13T01:14:20+02:00</lastmod>
   </url>
@@ -13,13 +18,33 @@
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr/posts/securing_traefik_installation/</loc>
+    <loc>https://blog-gh.noki.fr/posts/traefik_article_series/02_securing_traefik_installation/</loc>
     <lastmod>2020-06-13T01:14:20+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr/posts/using_traefik_2.2_reverse_proxy_for_selfhosting/</loc>
+    <loc>https://blog-gh.noki.fr/posts/traefik_article_series/03_using_traefik_and_authelia_to_secure_services_access/</loc>
+    <lastmod>2020-06-12T20:30:39+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog-gh.noki.fr/posts/traefik_article_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/</loc>
     <lastmod>2020-06-12T20:29:46+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog-gh.noki.fr/categories/bugs/</loc>
+    <lastmod>2020-06-12T17:41:23+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog-gh.noki.fr/categories/</loc>
+    <lastmod>2020-06-12T17:41:23+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog-gh.noki.fr/categories/infrastructure/</loc>
+    <lastmod>2020-06-12T17:41:23+02:00</lastmod>
   </url>
   
   <url>
@@ -40,10 +65,6 @@
   <url>
     <loc>https://blog-gh.noki.fr/about/me/</loc>
     <lastmod>2020-06-08T00:56:06+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog-gh.noki.fr/categories/</loc>
   </url>
   
   <url>
