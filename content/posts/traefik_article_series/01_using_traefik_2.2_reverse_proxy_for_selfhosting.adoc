@@ -46,10 +46,10 @@ As you may have notice there is a network called proxy that is referenced by thi
 To create the proxy network simply call `docker network create proxy`
 
 Let's talk about the config volume that is defined too.
-Traefik can be configured either with command line arguments, env variables and configuration file (Called https://docs.traefik.io/v2.2/reference/static-configuration/file/[static configuration] in the documentation), the later will be used.
-And we will create it now. I prefer the yaml format because it avoid repeat your self between subsections and I'm lazy.
+Traefik can be configured either with command line arguments, env variables and configuration file (Called https://docs.traefik.io/v2.2/reference/static-configuration/file/[static configuration] in the documentation), the latter will be used.
+And we will create it now. I prefer the yaml format because it avoids repeating your self between subsections and I'm lazy.
 
-Our config will need to define few entrypoints and the docker provider section. 
+Our config will need to define one entrypoint and the docker provider section. 
 I advice you to take a look at the docs and tweake it to follow your needs.
 
 ```yaml
@@ -73,7 +73,7 @@ entrypoints:
 
 ```
 
-Finally you can run traefik by running `docker-compose up -d` and check everything is running fine by going to the dashboard at localhost:8888 (or ip_of_the_machine:exposed_port)
+Finally you can run traefik by running `docker-compose up -d` and check that everything is running fine by going to the dashboard at localhost:8888 (or ip_of_the_machine:exposed_port)
 
 == Setting up our service 
 
@@ -112,30 +112,30 @@ services:
       traefik.http.services.projectsend.loadbalancer.server.port: 80
 ```
 
-Okay so you may have noticed that we again declare the proxy network and attached it the service (it is really important and is common mistake to omit it, so be careful).
+Okay so you may have noticed that we once again declare the proxy network and attached it the service (it is really important and it is a common mistake to omit it, so be careful).
 
 The service is exposed on port 9999. It will be used for debugging purposes since all traffic should go over traefik and be accessible on port 8888.
 
 Okay now, let's take a look at the labels dict. The labels will be used by traefik for proxifying request to the service. 
-It is known as Dynamic Configuration in the documentation and precisely it the docker Dynamic configuration, the complete reference can be found https://docs.traefik.io/v2.2/reference/dynamic-configuration/docker/[here]. 
-In this configuration, we should tell traefik to enable the route (since we precised not exposedByDefault in the static configuration above).
+It is known as Dynamic Configuration in the documentation and more precisely it is the docker Dynamic configuration, the complete reference can be found https://docs.traefik.io/v2.2/reference/dynamic-configuration/docker/[here]. 
+In this configuration, we ask traefik to enable the route (since we specified not exposedByDefault in the static configuration above).
 
 .Here there is two kind of concepts
 * The https://docs.traefik.io/v2.2/routing/routers/[routers], that configure the way requests are provided to the service
-* The https://docs.traefik.io/v2.2/routing/services/[services], that gives informations about how the service is hosted and available. 
+* The https://docs.traefik.io/v2.2/routing/services/[services], that give information about how the service is hosted and available. 
 
 In our case the configuration is pretty basic, we tell the router called projectsend to listen to traefik http entrypoint (port 8888).
-we tell the router to accepts requests based on a rule, in our case either 127.0.0.1 or your host ip.
-And we tell traefik that a service called projectsend listen on port 80 which is container side exposed port. (we do not use port 9999 since this port is open on the host side.)
+we tell the router to accept requests based on a rule, in our case either 127.0.0.1 or your host ip.
+And we tell traefik that a service called projectsend listens on port 80 which is container side exposed port. (we do not use port 9999 since this port is open from the host side.)
 
 And that's it. With such informations, traefik will be able to forward request comming from traefik:8888 -> projectsend:80.
 
 We can run `docker-compose up -d` and access projectsend from localhost:9999 and localhost:8888 which is traefik.
 
-Congratulations you selfhost your first service using traefik ! 
+Congratulations you have selfhost your first service using traefik ! 
 
 Before doing some crazy things and expose anything on the internet, you must add some security like HTTPS or secured http headers.
 
 You can find this in the next article of this series : link:{{< ref "02_securing_traefik_installation.adoc" >}}[Secure your Traefik Installation]
 
-I also sugest you to take a look at the documentation, and doing some experiments locally.
+I also suggest you to take a look at the documentation, and doing some experiments locally.
