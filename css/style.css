@@ -50,3 +50,13 @@ article{
     margin-right: auto;
     width: 100%;
 }
+
+#toc {
+    background-color: aliceblue;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+#toctitle {
+    font-size: 1.3em
+}

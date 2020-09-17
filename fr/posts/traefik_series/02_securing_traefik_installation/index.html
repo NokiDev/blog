@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?port=1313&mindelay=10&v=2" data-no-instant defer></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Sécuriser son installation de Traefik</title>
+	<meta name="description" content="Décrit avec asciidoc, construit avec Hugo et hébergé sur Github.">
+	<meta name="author" content="Timothé &#34;NokiDev&#34; Van Deputte">
+	<link rel="stylesheet"
+      href="/css/tomorrow-night-bright.min.css">
+	<script src="/js/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<link rel="stylesheet" href="/css/style.css">
+	
+</head>
+<body>
+	<header>
+	(╯°□°)╯︵ uozɐɯɐ - (╯°□°)╯︵ ʞooqǝɔɐɟ  - (╯°□°)╯︵ ǝlddɐ - (╯°□°)╯︵ ǝlƃoooƃ <br>
+	/***************************************************************************************************<br>
+	*
+	\name <a href="http://localhost:1313/">Le Blog de NokiDev</a><br>
+	*
+	\author Timothé &#34;NokiDev&#34; Van Deputte<br>
+	*
+	\brief <span>Un blog sur l&#39;infrastructure et le developpement logiciel</span><br>
+	*
+	\details <span>Décrit avec asciidoc, construit avec Hugo et hébergé sur Github.</span><br>
+	*
+	\note Le code source est disponible sur <a href="https://github.com/NokiDev/blog">https://github.com/NokiDev/blog</a>
+	<br>*
+	Si vous trouvez une coquille ou avez une question n&#39;hésitez pas à créer une Issue :)
+	<br>
+	<nav>
+		*
+		Blog disponible en : 
+		
+		<a href="http://localhost:1313/en/"><b>English</b></a>.
+		
+		<a href="http://localhost:1313/fr/"><b>Français</b></a>.
+		
+	</nav>
+	***************************************************************************************************/
+	<p>
+	<nav>
+			
+			
+			<a href="/fr/about/"><b>A Propos</b></a>.
+			
+			<a href="/fr/"><b>Récent</b></a>.
+			
+			<a href="/fr/posts/"><b>Tous les billets</b></a>.
+			
+			<a href="/fr/categories/"><b>Par Catégories</b></a>.
+			
+			<a href="/fr/tags/"><b>Par mots clés</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Sécuriser son installation de Traefik</h1>
+			<p>
+				Lire aussi en : 
+				
+				<span>
+					<a href="http://localhost:1313/en/posts/traefik_series/02_securing_traefik_installation/">English</a>
+				</span>
+				
+			</p>
+			<b><time>13.06.2020 01:14</time></b>
+		       
+			<div>
+				<div class="paragraph">
+<p>In this article we will see how to configure traefik to use https and configure middlewares for having a quite good security rank on <a href="https://www.ssllabs.com">SSLLabs</a>. This is mandatory if you plan to exposes your services on the Internet.</p>
+</div>
+<div class="paragraph">
+<p>This article directly follows <a href="/posts/using_traefik_2.2_reverse_proxy_for_selfhosting">Using traefik for deploying your first service</a> and will use docker-compose file definitions we used back then.</p>
+</div>
+<div class="ulist">
+<div class="title">For this article we will need a few things</div>
+<ul>
+<li>
+<p>A domain name</p>
+</li>
+<li>
+<p>Port 80/443 open on your router</p>
+</li>
+<li>
+<p>Router configured to forward traffic on port 80/443 to your machine hosting traefik on port exposed in dockerfile (80/443 for simplicity)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s dig in !</p>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle" class="title">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_secured_connection_a_k_a_https">Secured connection a.k.a HTTPS</a>
+<ul class="sectlevel2">
+<li><a href="#_lets_encrypt_certificates">Let&#8217;s Encrypt Certificates</a></li>
+<li><a href="#_get_a_a_rank_on_ssl_labs">Get a A rank on SSL Labs</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_secured_connection_a_k_a_https">Secured connection a.k.a HTTPS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Secured connection is done using https protocol, this protocol uses certifates signed, by a certifcate authority.
+Before 2016 thoose certificates had to be bought separately from the domain name they protect, and were pretty expansive and not specially accessible for individuals.</p>
+</div>
+<div class="paragraph">
+<p>"Recently" an open certificate authority emerged, to promote security among the web. They solved a big issue by allowing automatic certificate generation for a particular domain.
+It works by solving challenges to prove that we are the owners of this domain name.
+This entity is called <a href="https://letsencrypt.org/">Let&#8217;s encrypt</a>.</p>
+</div>
+<div class="ulist">
+<div class="title">There is multiple kind of challenges, you can solve depending on what you want.</div>
+<ul>
+<li>
+<p>tlsChallenge, by accessing the certificate requester on port 443 (secured)</p>
+</li>
+<li>
+<p>httpChallenge, by accessing the certificate requester on port 80 (less secured)</p>
+</li>
+<li>
+<p>dnsChallenge, by verifying keys from DNS records. (require automation on your domain name provider side)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In my case I&#8217;m using the dnsChallenge, because it allows to create wildcard certificates such as *.noki.fr and secure every subdomains of noki.fr.
+Since the dnsChallenge depends on your provider, we won&#8217;t use it in this article, but I sugest you to take a look. (I&#8217;m using OVH provider btw)</p>
+</div>
+<div class="paragraph">
+<p>Having certificates is already a major step in securing our services but it won&#8217;t suffice we need to ensure we&#8217;re not supporting deprecated TLS version, and won&#8217;t be attacked on known failure on the security layer.</p>
+</div>
+<div class="paragraph">
+<p>e.g Few years ago, a security failure was found in OpenSSL protocol, and called Heartbleed. This failure was a bug in OpenSSL, and allowed an attacker, to buffer overflow the server, and exploring is memory to retrieve signing private keys.</p>
+</div>
+<div class="paragraph">
+<p>There is also a good number of weakness in some version of TLS, that we need to fix before deploying our services.
+This will be tested by a tool provided, by SSLLabs.</p>
+</div>
+<div class="sect2">
+<h3 id="_lets_encrypt_certificates">Let&#8217;s Encrypt Certificates</h3>
+<div class="paragraph">
+<p>Set up let&#8217;s encrypt certificates with traefik is a fairly easy task. Traefik has builtin support of Let&#8217;s Encrypt certificate retrieval, and renewal. This is very great because configuring it with cert-bot (tool provided by let&#8217;s encrypt) can be time consuming, and complexe to setup at the OS level by defining cron jobs and scripts to parse certificates and Validity over time.</p>
+</div>
+<div class="paragraph">
+<p>First we need to add a new entrypoint for our https connections.
+This is done by editing traefik main configuration, and adding the web-secure entrypoint.
+Like so :</p>
+</div>
+<div class="listingblock">
+<div class="title">config.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">entrypoints:
+  web:
+    address: ":80"
+
+  web-secure:
+    address: ":443"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that we have another entrypoint, for https connection, we can add a certificate resolver.
+The certificate resolvers that we are going to add, are let&#8217;s encrypt ones. But you can also provide your own self-signed certificates.</p>
+</div>
+<div class="paragraph">
+<p>Still in the static configuration adds the following sections :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">serversTransport:
+  insecureskipverify: true
+
+certificatesresolvers:
+ # example for httpChallenge.
+  httpChal: # The name is arbitrary.
+    acme:
+      email: YOUR_EMAIL
+      storage: /certs/acme.json # match the volume defined in docker-compose.yml
+      # CAServer is set to staging because let's encrypt apply a request rate limit, and you would ban yourself if testing with the prod url. The default value is the prod server, so comment it out when you're ready
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      httpChallenge:
+        entrypoint: web # name of the http entrypoint
+  # exemple for tlsChallenge
+  tlsChal:
+    acme:
+      email: YOUR_EMAIL
+      storage: /certs/acme.json
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      tlsChallenge: {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first section <code>serversTransport.insecureskipverify</code> is needed temporarly, if you want traefik to accept self signed certificates. This situation is likely to happen while we are tweaking configuration, feel free to set it to false when everything works great.</p>
+</div>
+<div class="paragraph">
+<p>The second section, are <a href="https://docs.traefik.io/v2.2/https/acme/#the-different-acme-challenges" class="bare">https://docs.traefik.io/v2.2/https/acme/#the-different-acme-challenges</a>
+[certificateresolvers], that will be used later, when configuring our service, to tell traefik how it should retrieve https certificates.
+Here we added two resolvers to present common possibilities. (it misses the dns one tough)</p>
+</div>
+<div class="paragraph">
+<p>Okay so we have traefik configured for certificate retrieval from let&#8217;s encrypt. Let&#8217;s update our docker services.</p>
+</div>
+<div class="paragraph">
+<p>traefik docker-compose.yml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">version: '3.7'
+
+networks:
+  proxy:
+    external: true
+
+services:
+  traefik:
+    image: traefik:v2.2.1
+    restart: unless-stopped
+    container_name: traefik
+    ports:
+      - 0.0.0.0:8888:80
+      - 127.0.0.1:8080:8080
+      - 0.0.0.0:443:443
+    environment:
+      TZ: "Europe/Paris" # Setting Timezone.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Needed to allow traefik access docker api.
+      - /etc/localtime:/etc/localtime:ro # Sharing time with host OS as read only (ro).
+      - ./config.yml:/etc/traefik/traefik.yml
+
+      - ./certs:/certs ## For storing certificates.
+    networks:
+      - traefik</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We didn&#8217;t added much to the file, only a new volume for storing certificates on the host, and a port exposure for 443 (https port)
+Note, that I also changed binding address from 127.0.0.1 to 0.0.0.0 to make the container accepts requests comming from all addresses and not only localhost.</p>
+</div>
+<div class="paragraph">
+<p>projectsend docker-compose.yml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">version: "3.7"
+
+networks:
+  proxy:
+    external: true
+
+services:
+  projectsend:
+    image: linuxserver/projectsend
+    restart: unless-stopped
+    container_name: projectsend
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Paris
+      MAX_UPLOAD: 5000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro # Sharing time with host OS as read only (ro).
+      - ./config:/config
+      - ./data:/data
+    ports:
+      - 9999:80
+    networks:
+      - proxy
+    labels:
+      traefik.enable: true
+      traefik.http.routers.projectsend.entrypoints: web,web-secured
+      traefik.http.routers.projectsend.rule: Host(`send.domain.tld`)
+      traefik.http.routers.projectsend.tls.certresolver: httpChal
+      traefik.http.routers.projectsend.tls.domains.domain1.main: send.domain.tld
+      traefik.http.services.projectsend.loadbalancer.server.port: 80</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">For project send we made some additions to the labels used.</div>
+<ul>
+<li>
+<p>The router entrypoints is now the https one.</p>
+</li>
+<li>
+<p>We added a forward rule to the router, it tells traefik that only requests for <code>send.domain.tld</code> will get through</p>
+</li>
+<li>
+<p>We precised the certresolver that would be used, for this domain</p>
+</li>
+<li>
+<p>And we precise the domain name that will be associated to the certificate.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Other option regarding TLS can be found <a href="https://docs.traefik.io/v2.0/routing/routers/#tls">here</a></p>
+</div>
+<div class="paragraph">
+<p>I think we are good for a first test.
+Recreate the containers by running <code>docker-compose up -d</code> for both projects. (docker-compose up will recreate the container if changes have been made to service definitions)</p>
+</div>
+<div class="paragraph">
+<p>Try to access <a href="https://send.domain.tld" class="bare">https://send.domain.tld</a>  you should be warned that the certificate is self signed, but this is normal since we used staging server for let&#8217;s encrypt.</p>
+</div>
+<div class="paragraph">
+<p>If that&#8217;s not the case, then take a look to traefik logs by running <code>docker-compose logs</code>.</p>
+</div>
+<div class="paragraph">
+<p>If everything worked out, we can comment caserver in traefik main configuration and recreate the container. This time by destroying it explicitely</p>
+</div>
+<div class="paragraph">
+<p><code>docker-compose stop traefik</code>,
+<code>docker-compose rm traefik</code> and <code>docker-compose up -d</code></p>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s make a test on SSL labs for our service send.domain.tld.
+It should not be very good&#8230;&#8203; Even it would say that your services support vulnerable protocols. Let&#8217;s remediate about it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_a_a_rank_on_ssl_labs">Get a A rank on SSL Labs</h3>
+<div class="paragraph">
+<p>Traefik allows to customize, TLS options that will be used when establishing secured connections.
+This is done with dynamic configuration.
+As dynamic configuration say, we can define everything in docker labels. As this is fine when you have 1 or 2 services, but when you have a lot of them you&#8217;re going te define tls options everywhere. It is counter productive and makes docker-compose file longer.</p>
+</div>
+<div class="paragraph">
+<p>As I said earlier, I&#8217;m lazy and fortunately traefik gives a way to create dynamic configuration in files.</p>
+</div>
+<div class="sect3">
+<h4 id="_using_file_provider_for_shared_configuration">Using file provider for shared configuration</h4>
+<div class="paragraph">
+<p>In addition to tls options we are going to define a few common middlewares containing great defaults. Middlewares are attached to routers and operate on in/out requests to add information about the request, forward, reject etc&#8230;&#8203;</p>
+</div>
+<div class="sect4">
+<h5 id="_middlewares">Middlewares</h5>
+<div class="paragraph">
+<p>Let&#8217;s create a directory dynamic_configuration and create a common_middlewares.yml file in it with the following content :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">http:
+  middlewares:
+    secured:
+      chain:
+        middlewares:
+          - https_redirect
+          - secured_headers
+
+    https_redirect:
+      redirectScheme:
+        permanent: true
+        scheme: https
+
+    secured_headers:
+      headers:
+        sslRedirect: true
+        sslHost: use_https_for_god_sake.domain.tld
+        sslProxyHeaders:
+          X-Forwarded-Proto: https
+        stsSeconds: 15552000
+        stsPreload: true
+        stsIncludeSubdomains: true
+        forceSTSHeader: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: 'origin-when-cross-origin'
+        customFrameOptionsValue: 'SAMEORIGIN'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we add 3 middlewares.
+The first one is a "chain" and simply unify the two other middlewares under the same name.
+The second, define a redirection to https when accessing, the service with http.
+And the third, defines several headers, used to ensure you&#8217;re using https, and some good defaults for http requests security.</p>
+</div>
+<div class="paragraph">
+<p>(To note, with traefik 2.2 https redirection can be done on the entrypoint level rather than using a middleware )</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_good_tls_options">Good TLS options</h5>
+<div class="paragraph">
+<p>We can now customize tls options.
+Create another file in the dynamic_configuration directory for storing tls options tls_options.yml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">tls:
+  options:
+    default: # Default tls options will be used by defaults !
+      minVersion: VersionTLS12
+      sniStrict: true
+      cipherSuites:
+        - TLS_FALLBACK_SCSV # This ensure to try
+# TLS 1.3
+        - TLS_CHACHA20_POLY1305_SHA256
+        - TLS_AES_256_GCM_SHA384
+        - TLS_AES_128_GCM_SHA256
+# TLS 1.2
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256  # This one is weak but required to allow communication with old IE versions and old Safari
+    strict:
+      minVersion: VersionTLS13
+      sniStric: true
+      cipherSuites:
+        - TLS_FALLBACK_SCSV
+        - TLS_CHACHA20_POLY1305_SHA256
+        - TLS_AES_256_GCM_SHA384</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To use our new dynamic configurations we&#8217;ll need to add a file provider in addition to the docker one.
+By editing traefik static configuration and adding</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">providers:
+  docker:
+    watch: true
+    network: proxy
+    exposedByDefault: false
+  file:
+    directory: /file_configurations/
+    watch: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since Traefik 2.2 we can bind middleware to our entrypoints, we can also bind the certresolver if needed. So will make the change now.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">web-secure:
+  address: ":443"
+  http:
+    middlewares:
+      - "secured@file"
+    tls:
+      certResolver: httpChal
+      domains:
+      - main: "domain.tld"
+        sans:
+          - www.domain.tld</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice the @provider syntax used here for specifying the middleware.</p>
+</div>
+<div class="paragraph">
+<p>Finally we&#8217;ll need to edit traefik&#8217;s docker-compose.yml to add a new volume mapping
+<code>./dynamic_configuration:/file_configurations</code></p>
+</div>
+<div class="paragraph">
+<p>And we can restart traefik</p>
+</div>
+<div class="paragraph">
+<p>In projectsend docker-compose we can now remove this line :
+<code>traefik.http.routers.projectsend.tls.certresolver: httpChal</code> since it is now defaultly applied on the entrypoint web-secure.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s Make SSLLab test again &#8230;&#8203;. &#8230;&#8203;. &#8230;&#8203;.</p>
+</div>
+<div class="paragraph">
+<p>It should be green with A or A+ score.</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s all for this article, I hope you enjoyed it.</p>
+</div>
+<div class="paragraph">
+<p>Thanks you.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/fr/posts/traefik_series/02_securing_traefik_installation/">Sécuriser son installation de Traefik</a></li>
+				
+				<li><a href="/fr/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/">Utiliser Traefik v2.2 pour auto-héberger votre 1er service.</a></li>
+				
+				<li><a href="/fr/posts/orange_dns_and_accessing_external_services/">Les déboires du DNS de la Livebox 4 Pro, et l&#39;auto-hébergement...</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<span>====================================================================================================</span>
+	<p>&copy; 2020 <a href="http://localhost:1313/"><b>Le Blog de NokiDev</b></a>.
+	<a href="https://github.com/NokiDev"><b>Github</b></a>.
+	<a href="https://gitlab.com/NokiDev"><b>Gitlab</b></a>.
+	<a href="https://twitter.com/NokiDev"><b>Twitter</b></a>.
+	</p>
+	<span>====================================================================================================</span>
+</footer>
+
+</body>
+</html>
