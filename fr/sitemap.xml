@@ -3,165 +3,86 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://localhost:1313/fr/posts/traefik_series/</loc>
-    <lastmod>2020-06-13T01:14:20+02:00</lastmod>
+    <loc>https://blog-gh.noki.fr:1313/fr/posts/traefik_series/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/traefik_series/"
+                href="https://blog-gh.noki.fr:1313/en/posts/traefik_series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://localhost:1313/fr/posts/traefik_series/"
+                href="https://blog-gh.noki.fr:1313/fr/posts/traefik_series/"
                 />
   </url>
   
   <url>
-    <loc>http://localhost:1313/fr/posts/</loc>
-    <lastmod>2020-06-13T01:14:20+02:00</lastmod>
+    <loc>https://blog-gh.noki.fr:1313/fr/about/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/"
+                href="https://blog-gh.noki.fr:1313/en/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://localhost:1313/fr/posts/"
+                href="https://blog-gh.noki.fr:1313/fr/about/"
                 />
   </url>
   
   <url>
-    <loc>http://localhost:1313/fr/</loc>
-    <lastmod>2020-06-13T01:14:20+02:00</lastmod>
+    <loc>https://blog-gh.noki.fr:1313/fr/posts/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/"
+                href="https://blog-gh.noki.fr:1313/en/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://localhost:1313/fr/"
+                href="https://blog-gh.noki.fr:1313/fr/posts/"
                 />
   </url>
   
   <url>
-    <loc>http://localhost:1313/fr/posts/traefik_series/02_securing_traefik_installation/</loc>
-    <lastmod>2020-06-13T01:14:20+02:00</lastmod>
+    <loc>https://blog-gh.noki.fr:1313/fr/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/traefik_series/02_securing_traefik_installation/"
+                href="https://blog-gh.noki.fr:1313/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://localhost:1313/fr/posts/traefik_series/02_securing_traefik_installation/"
+                href="https://blog-gh.noki.fr:1313/fr/categories/"
                 />
   </url>
   
   <url>
-    <loc>http://localhost:1313/fr/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/</loc>
-    <lastmod>2020-06-12T20:29:46+02:00</lastmod>
+    <loc>https://blog-gh.noki.fr:1313/fr/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/"
+                href="https://blog-gh.noki.fr:1313/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://localhost:1313/fr/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/"
+                href="https://blog-gh.noki.fr:1313/fr/"
                 />
   </url>
   
   <url>
-    <loc>http://localhost:1313/fr/posts/orange_dns_and_accessing_external_services/</loc>
-    <lastmod>2020-06-12T17:41:23+02:00</lastmod>
+    <loc>https://blog-gh.noki.fr:1313/fr/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/orange_dns_and_accessing_external_services/"
+                href="https://blog-gh.noki.fr:1313/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://localhost:1313/fr/posts/orange_dns_and_accessing_external_services/"
-                />
-  </url>
-  
-  <url>
-    <loc>http://localhost:1313/fr/about/</loc>
-    <lastmod>2020-06-08T00:56:06+02:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/about/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/about/"
-                />
-  </url>
-  
-  <url>
-    <loc>http://localhost:1313/fr/about/infrastructure/</loc>
-    <lastmod>2020-06-08T00:56:06+02:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/about/infrastructure/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/about/infrastructure/"
-                />
-  </url>
-  
-  <url>
-    <loc>http://localhost:1313/fr/about/me/</loc>
-    <lastmod>2020-06-08T00:56:06+02:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/about/me/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/about/me/"
-                />
-  </url>
-  
-  <url>
-    <loc>http://localhost:1313/fr/categories/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/categories/"
-                />
-  </url>
-  
-  <url>
-    <loc>http://localhost:1313/fr/tags/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/tags/"
+                href="https://blog-gh.noki.fr:1313/fr/tags/"
                 />
   </url>
   
