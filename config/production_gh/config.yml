@@ -1,1 +1,5 @@
 baseURL: "https://blog-gh.noki.fr"
+
+buildFuture: false
+buildExpired: false
+buildDrafts: false

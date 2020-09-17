@@ -1,0 +1,169 @@
+---
+title: "HomeLab infrastructure"
+date: 2020-06-08T00:56:06+02:00
+draft: false
+---
+:toc: left
+
+This describe the current state of my home infrastructure.
+I'll go through a short description of my machines first and then with an overview, and finally with a list of all services I host.
+
+In this page, I'll reference a few blog post related, to specific services or setup.
+
+NB: If you want an history of the infrastructure take a look to the git repository and changes of this file over time.
+
+
+== Overview
+
+So we have 3 machines each one is dedicated to a special task.
+
+- NAS -> Store data, and host a few services
+- HTPC -> Host services related to Streaming (audio and video) because it has a graphical card
+- Proxy -> Only serves the reverse proxy role, and DNS/ DHCP (Inner-edge services)
+
+All of the services I host are deployed using docker. 
+All the machines uses docker swarm to facilitate the deployement ( Host is declared in a file and can be easily versionned)
+
+== My babies
+
+=== PiProxy
+
+For the proxy purposed I invested in a Raspberry Pi 4 Model B. 
+The RPI4 has the advantage to be small, having a great network interface and has quite good performances. 
+I think it is easy to set them up as a cluster in case I want to upgrade them.
+
+==== Hardware
+// TODO Add rpi4 specs
+
+RAM: 4GB
+Ethernet: 1Gb (That's why I uses it as proxy)
+
+==== Services
+
+=== NASGull
+
+image::/img/about/infrastructure/NAS.jpg[300,300, float="left"]
+image::/img/about/infrastructure/NAS_internals.jpg[300,300, float="right"]
+
+My very first build, I'm proud of it. It made me learn a lot about hardware, specs, and how everything work together. 
+As first build it was not bad but if I look back I think I should have done few things differently. 
+That's why it will be changed a bit in weeks to come.
+
+This machine as you might have guessed, serve the NAS purpose. 
+
+.The rules are
+* A lot of disks
+* A great Network Interface (Would have prefered to have two, but my network is not that large for the moment) 
+
+==== Hardware
+
+Processor: Intel Pentium Gold
+Motherboard: MSI Mini ITX
+PSU: 450W Platinium Seasonic 
+CG: None
+RAM: 16GB
+Additionnal PCIE: 2 * 2 SATA port card 
+HDD: 8 * 4TB Western Digital RED + 1 * 1TB Seagate Barracuda.
+SSD: 100GB WD blue.
+Case: Actually Fractal Design R5 White that is a bit massive. So I'm waiting for the delivery of a Node804 case.
+
+==== Software
+
+OS: FreeNAS
+1 CentOS VM for docker services.
+
+.Running Services
+* NFS
+* SMART Drive tests
+* Two ZFS array (RAID 10 equivalent.) so 12TB usable.
+
+I plan to move to TrueNAS Core when out, it should allow me to remove the CentOS VM which I don't really need.
+
+=== HTPC
+
+image::/img/about/infrastructure/HTPC.jpg[300,300]
+
+An old ASUS laptop, that I once used and is now too old to be used as a laptop. 
+The battery is melting, and needs to be plugged in almost all the time.
+So I made an HTPC out of him and it works pretty great (It used to be my NAS with several bay connected with USB.) Cheap and working.
+
+The only customization I made was to remove the screen. Leaving the keyboard and eventually plug him in on a screen.
+A thing I hated with this laptop, was that I could'nt get any boot screen.
+So to perform the installation I had to remove the HDD and install the OS from another computer.
+
+==== Hardware
+
+Processor: Intel Core i7 
+RAM: 2* 8GB
+CG: Nvidia 730M
+HDD: 1TB
+Ethenet: 1GB (but actually uses 100M don't really know why.... Need to investigate.)
+
+==== Software
+
+OS : Ubuntu 18.04
+Docker
+
+=== Services deployed 
+
+.Network
+* Pihole
+* Traefik
+
+.Auth
+* Authelia
+
+.Video/Audio Streaming
+* Jellyfin
+* Airsonic
+
+.UserManagement
+* OpenLdap
+* FusionDirectory
+
+.Development
+* Gitea
+* DroneCI
+* Sonatype Nexus Registry
+
+.Monitoring
+* SwarmPit
+* Zabbix
+* Netdata
+* Graylog
+
+.Social
+* FreshRSS
+* Rocket.Chat
+
+.Document Management
+* Nextcloud
+* Collabora
+* BookStack
+
+////
+.Torrenting & cie
+* Sonarr
+* Radarr
+* Lidarr
+* Bazarr
+* Jackett
+* QBittorrent
+* Ombi
+////
+
+=== Related blog posts.
+
+
+.Basics : (Stands to be really simple to achieve a single purpose and getting started)
+* Setup NFS service on your NAS and connect from another computer.
+* Deploy a service to your local network
+* Deploy a service to the internet
+
+.Advanced :
+* Setup your Installation using Ansible 
+* Use docker for deployement
+* Monitor your services
+
+.MISC : (Somethings I was hit by when selfhosting, or useful tips)
+* Orange (french internet provider) DNS issues for accessing local services with external address

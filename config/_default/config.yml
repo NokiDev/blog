@@ -1,10 +1,9 @@
 baseURL: "http://localhost:1313"
-languageCode: "en-us"
+languageCode: "en"
 languageName: "English"
-title: "NokiDev's blog"
 titleCaseStyle: "AP"
-DefaultContentLanguage: en
-DefaultContentLanguageInSubdir: true
+defaultContentLanguage: en
+defaultContentLanguageInSubdir: true
 
 enableRobotsTXT: true
 
@@ -12,50 +11,96 @@ theme: smol
 
 log: true
 build: 
-  useResourceCacheWhen: fallback
-  writeStats: true # Only for prod.
-  
+  useResourceCacheWhen: never
+  writeStats: false # Only for prod.
+
 buildFuture: true
 buildExpired: true
 buildDrafts: true
 preserveTaxonomyNames: true
 
-menu:
-  # This displays buttons in the navbar to access your contents
-  main:
-    - identifier: "latest" # An unique identifier for the button
-      name: "Latest"       # A display name for the button
-      url: "/"      
-      weight: 2  
-    - identifier: "about" # An unique identifier for the button
-      name: "About"       # A display name for the button
-      url: "/about/"      # The path to the content. It can lead to a single page (like here)
-      weight: 1           # A number to order the buttons in the navbar
-    - identifier: "posts"
-      name: "All posts"
-      url: "/posts/"       # The path can lead to a content folder too.
-      weight: 3
-    - identifier: "categories"
-      name: "Categories"
-      url: "/categories/"
-      weight: 20 
-    - identifier: "tags"
-      name: "Tags"
-      url: "/tags/"
-      weight: 30
+languages:
+  en:
+    title: "NokiDev's blog"
+    weight: 10
+    contentDir: content/english
+    languageName: "English"
+    menu:
+      main:
+        - identifier: "latest" # An unique identifier for the button
+          name: "Latest"       # A display name for the button
+          url: "/"      
+          weight: 2  
+        - identifier: "about" # An unique identifier for the button
+          name: "About"       # A display name for the button
+          url: "/about/"      # The path to the content. It can lead to a single page (like here)
+          weight: 1           # A number to order the buttons in the navbar
+        - identifier: "posts"
+          name: "All posts"
+          url: "/posts/"       # The path can lead to a content folder too.
+          weight: 3
+        - identifier: "categories"
+          name: "Categories"
+          url: "/categories/"
+          weight: 20 
+        - identifier: "tags"
+          name: "Tags"
+          url: "/tags/"
+          weight: 30
+      footer:
+      - name: "Github"
+        url: "https://github.com/NokiDev"
+        weight: 1 
 
-  footer:
-    - name: "Github"
-      url: "https://github.com/NokiDev"
-      weight: 1 
+      - name: "Gitlab"
+        url: "https://gitlab.com/NokiDev"
+        weight: 2 
 
-    - name: "Gitlab"
-      url: "https://gitlab.com/NokiDev"
-      weight: 2 
+      - name: "Twitter"
+        url: "https://twitter.com/NokiDev"
+        weight: 3
+  fr:
+    title: "Le Blog de NokiDev"
+    contentDir: content/french
+    weight: 0
+    languageName: "Français"
+    params:
+      subtitle: "Un blog sur l'infrastructure et le developpement logiciel"
+      description: "Décrit avec asciidoc, construit avec Hugo et hébergé sur Github."
+    menu:
+      main:
+        - identifier: "latest" # An unique identifier for the button
+          name: "Récent"       # A display name for the button
+          url: "/"      
+          weight: 2  
+        - identifier: "about" # An unique identifier for the button
+          name: "A Propos"       # A display name for the button
+          url: "/about/"      # The path to the content. It can lead to a single page (like here)
+          weight: 1           # A number to order the buttons in the navbar
+        - identifier: "posts"
+          name: "Tous les billets"
+          url: "/posts/"       # The path can lead to a content folder too.
+          weight: 3
+        - identifier: "categories"
+          name: "Par Catégories"
+          url: "/categories/"
+          weight: 20 
+        - identifier: "tags"
+          name: "Par mots clés"
+          url: "/tags/"
+          weight: 30
+      footer:
+        - name: "Github"
+          url: "https://github.com/NokiDev"
+          weight: 1 
 
-    - name: "Twitter"
-      url: "https://twitter.com/NokiDev"
-      weight: 3
+        - name: "Gitlab"
+          url: "https://gitlab.com/NokiDev"
+          weight: 2 
+
+        - name: "Twitter"
+          url: "https://twitter.com/NokiDev"
+          weight: 3
 
 params:
   subtitle: "A Tech blog about infrastructure and development"
@@ -66,7 +111,6 @@ params:
 taxonomies:
   category: "categories"
   tag: "tags"
-
 
 privacy:
   vimeo:

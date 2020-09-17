@@ -1,7 +1,7 @@
 ---
 title: "Some words about myself"
 date: 2020-06-08T00:56:06+02:00
-draft: true
+draft: false
 ---
 
 == Hello 
@@ -12,7 +12,7 @@ I am a french developper, living in France too. I'm currently working in the med
 and more recently working on CI/CD, and server administration trying to instaurate the DevOps culture in my company.
 
 I'm really passionate about computer science and all the domains that cross it. Like CyberSecurity, Server administration,
-software developement, a bit of hardware and IOTs.
+software developement, a bit of hardware and IOTs (but I'm really bad at it).
 
 == Why this blog ? 
 
@@ -23,12 +23,12 @@ It just happen suddenly after helping some folks on Reddit (r/selfhosted and r/h
 writing great articles but wanted to join the adventure too. (And I want a traefik ambassador shirt lol.)
 So I'd dcided to use Hugo, which seemed a nice static content tool, it is still in alpha (or beta) I think, and is a bit harsh to tame, especially
 when it comes to create a special theme for your blog. (*By the way the current theme, used here is not mine and is called smol)
-Anyway, hugo works fine, for some micro blogging in Markdown.
+Anyway, hugo works fine, for some micro blogging in Markdown and Asciidoc (what I use).
 
 The source code of the blog is located at https://github.com/NokiDev/blog with all the posts, and everything.
 I'd like even if you're a non tech user, to create a github account (or gitlab account when I would have mirrored the repository.) 
 And try to participate.
-You can file "issues" in which you can ask for help, share some question with the community, maybe get help from it.  
+You can file "issues" in which you can ask for help, share some questions with the community, maybe get help from it.  
 You can create a pull request, to submit a correction about an article, and even a translation if you like.
 
 == What this blog is about

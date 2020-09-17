@@ -1,5 +1,5 @@
 ---
-title: "HomeLab infrastructure"
+title: "Mon infra à la maison."
 date: 2020-06-08T00:56:06+02:00
 draft: true
 ---
