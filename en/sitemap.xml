@@ -3,115 +3,115 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/posts/traefik_series/</loc>
+    <loc>https://blog-gh.noki.fr/en/posts/traefik_series/</loc>
     <lastmod>2020-06-13T01:14:20+02:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://blog-gh.noki.fr:1313/fr/posts/traefik_series/"
+                href="https://blog-gh.noki.fr/fr/posts/traefik_series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://blog-gh.noki.fr:1313/en/posts/traefik_series/"
+                href="https://blog-gh.noki.fr/en/posts/traefik_series/"
                 />
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/</loc>
+    <loc>https://blog-gh.noki.fr/en/</loc>
     <lastmod>2020-06-13T01:14:20+02:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://blog-gh.noki.fr:1313/fr/"
+                href="https://blog-gh.noki.fr/fr/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://blog-gh.noki.fr:1313/en/"
+                href="https://blog-gh.noki.fr/en/"
                 />
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/posts/</loc>
+    <loc>https://blog-gh.noki.fr/en/posts/</loc>
     <lastmod>2020-06-13T01:14:20+02:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://blog-gh.noki.fr:1313/fr/posts/"
+                href="https://blog-gh.noki.fr/fr/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://blog-gh.noki.fr:1313/en/posts/"
+                href="https://blog-gh.noki.fr/en/posts/"
                 />
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/posts/traefik_series/02_securing_traefik_installation/</loc>
+    <loc>https://blog-gh.noki.fr/en/posts/traefik_series/02_securing_traefik_installation/</loc>
     <lastmod>2020-06-13T01:14:20+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/</loc>
+    <loc>https://blog-gh.noki.fr/en/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/</loc>
     <lastmod>2020-06-12T20:29:46+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/posts/orange_dns_and_accessing_external_services/</loc>
+    <loc>https://blog-gh.noki.fr/en/posts/orange_dns_and_accessing_external_services/</loc>
     <lastmod>2020-06-12T17:41:23+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/about/</loc>
+    <loc>https://blog-gh.noki.fr/en/about/</loc>
     <lastmod>2020-06-08T00:56:06+02:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://blog-gh.noki.fr:1313/fr/about/"
+                href="https://blog-gh.noki.fr/fr/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://blog-gh.noki.fr:1313/en/about/"
+                href="https://blog-gh.noki.fr/en/about/"
                 />
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/about/infrastructure/</loc>
+    <loc>https://blog-gh.noki.fr/en/about/infrastructure/</loc>
     <lastmod>2020-06-08T00:56:06+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/about/me/</loc>
+    <loc>https://blog-gh.noki.fr/en/about/me/</loc>
     <lastmod>2020-06-08T00:56:06+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/categories/</loc>
+    <loc>https://blog-gh.noki.fr/en/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://blog-gh.noki.fr:1313/fr/categories/"
+                href="https://blog-gh.noki.fr/fr/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://blog-gh.noki.fr:1313/en/categories/"
+                href="https://blog-gh.noki.fr/en/categories/"
                 />
   </url>
   
   <url>
-    <loc>https://blog-gh.noki.fr:1313/en/tags/</loc>
+    <loc>https://blog-gh.noki.fr/en/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://blog-gh.noki.fr:1313/fr/tags/"
+                href="https://blog-gh.noki.fr/fr/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://blog-gh.noki.fr:1313/en/tags/"
+                href="https://blog-gh.noki.fr/en/tags/"
                 />
   </url>
   

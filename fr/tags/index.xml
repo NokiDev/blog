@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mots Clés on Le Blog de NokiDev</title>
-    <link>https://blog-gh.noki.fr:1313/fr/tags/</link>
+    <link>https://blog-gh.noki.fr/fr/tags/</link>
     <description>Recent content in Mots Clés on Le Blog de NokiDev</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-	<atom:link href="https://blog-gh.noki.fr:1313/fr/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog-gh.noki.fr/fr/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>
