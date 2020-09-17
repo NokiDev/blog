@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><script src="/livereload.js?port=1313&mindelay=10&v=2" data-no-instant defer></script>
+<head><script src="/livereload.js?port=443&mindelay=10&v=2" data-no-instant defer></script>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,7 +20,7 @@
 	(╯°□°)╯︵ uozɐɯɐ - (╯°□°)╯︵ ʞooqǝɔɐɟ  - (╯°□°)╯︵ ǝlddɐ - (╯°□°)╯︵ ǝlƃoooƃ <br>
 	/***************************************************************************************************<br>
 	*
-	\name <a href="http://localhost:1313/">Le Blog de NokiDev</a><br>
+	\name <a href="https://blog-gh.noki.fr/">Le Blog de NokiDev</a><br>
 	*
 	\author Timothé &#34;NokiDev&#34; Van Deputte<br>
 	*
@@ -36,9 +36,9 @@
 		*
 		Blog disponible en : 
 		
-		<a href="http://localhost:1313/en/"><b>English</b></a>.
+		<a href="https://blog-gh.noki.fr/en/"><b>English</b></a>.
 		
-		<a href="http://localhost:1313/fr/"><b>Français</b></a>.
+		<a href="https://blog-gh.noki.fr/fr/"><b>Français</b></a>.
 		
 	</nav>
 	***************************************************************************************************/
@@ -66,32 +66,34 @@
 		<article>
 			<h1>Utiliser Traefik v2.2 pour auto-héberger votre 1er service.</h1>
 			<p>
-				Lire aussi en : 
 				
-				<span>
-					<a href="http://localhost:1313/en/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/">English</a>
-				</span>
+				Lire aussi en : 
+					
+					<span>
+						<a href="https://blog-gh.noki.fr/en/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/">English</a>
+					</span>
+					
 				
 			</p>
 			<b><time>12.06.2020 20:29</time></b>
 		       
 			<div>
 				<div class="paragraph">
-<p>Traefik is a modern reverse proxy that integrates with container technologies and related orchestrators.
-In our case we&#8217;re going to use it&#8217;s docker integration.
-Traefik uses docker socket to retrieve information about running containers, and labels that are attached to it. (if you use docker inspect you would get the idea.)</p>
+<p>Traefik est un reverse proxy moderne, qui s&#8217;intègres avec les solutions containeurisées comme docker et kubernetes.
+Pour cette article, nous allons s&#8217;intéresser a son intégration avec docker.
+Traefik, utilise le socket docker (local ou distant) pour récupérer des informations a propos des containers déployés sur le systême ainsi que les labels qui lui sont accrochés. (Vous pouvez utiliser docker inspect pour avoir une idée des informations a sa disposition).</p>
 </div>
 <div class="paragraph">
-<p><strong>This article requires that you are already familiar with container thechnology and especially docker.</strong></p>
+<p><strong>Cette article demande un minimum de connaissances sur les environnements containeurisés et en particulier docker.</strong></p>
 </div>
 <div class="paragraph">
-<p><strong>Disclaimer: This article is not meant to secure your services, it is a pretty basic setup to start with traefik, if you want to secure your services head to the <a href="http://localhost:1313/fr/posts/traefik_series/02_securing_traefik_installation/">next article</a> of this series </strong></p>
+<p><strong>Disclaimer: Cette article n&#8217;as pas pour but de sécuriser votre installation, mais seulement vous permettre de commencer à utiliser Traefik et déployer un service. Nous verrons ce sujet dans <a href="https://blog-gh.noki.fr/fr/posts/traefik_series/02_securing_traefik_installation/">l&#8217;article suivant</a> de cette série</strong></p>
 </div>
 <div class="sect1">
-<h2 id="_setting_up_traefik">Setting up traefik</h2>
+<h2 id="_mettre_en_place_traefik">Mettre en place Traefik</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We&#8217;ll use the following docker-compose.yml file :</p>
+<p>Nous allons commencer en utilisant le docker-compose.yml suivant : (Rappel docker-compose.yml permet de décrire ses containers, a la place de la ligne de commande).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -120,19 +122,19 @@ services:
 </div>
 </div>
 <div class="paragraph">
-<p>As you may have notice there is a network called proxy that is referenced by this file. It is defined as external, because we want other services to use it too, and defining it external allow to create other services before actually deploying this docker-compose file. + if you use docker-compose rm it won&#8217;t try to remove the network.</p>
+<p>Comme vous pouvez le voir, il y&#8217;a un 'network' proxy qui est référencé dans ce fichier. Il est défini en 'external' car nous voulons que d&#8217;autres services puissent l&#8217;utiliser. Créer le réseau en externe, a un énorme avantage, celui de pouvoir déployer n&#8217;importe quel service, sans que le reverse proxy ne soit déployé (i.e docker-compose up), cela empêchera aussi docker-compose de le supprimer, si vous lancez <code>docker-compose rm</code>.</p>
 </div>
 <div class="paragraph">
-<p>To create the proxy network simply call <code>docker network create proxy</code></p>
+<p>Pour créer le réseau 'proxy' c&#8217;est simple, il suffit d&#8217;executé la commande suivante : <code>docker network create proxy</code></p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s talk about the config volume that is defined too.
-Traefik can be configured either with command line arguments, env variables and configuration file (Called <a href="https://docs.traefik.io/v2.2/reference/static-configuration/file/">static configuration</a> in the documentation), the latter will be used.
-And we will create it now. I prefer the yaml format because it avoids repeating your self between subsections and I&#8217;m lazy.</p>
+<p>Parlons maintenant du volume de 'config'.
+Traefik peut être configuré soit par la ligne de commande, soit par des variables d&#8217;environnements soit par un fichier de configuration (Appelée <a href="https://docs.traefik.io/v2.2/reference/static-configuration/file/">static configuration</a> dans la documentation). C&#8217;est bien cette dernière que nous allons utiliser ici.
+Et nous alons la créer maintenant. Je préfère utiliser le format YAML, parce qu&#8217;il évite de se répetter entre les sous sections, et que je suis flemmard.</p>
 </div>
 <div class="paragraph">
-<p>Our config will need to define one entrypoint and the docker provider section.
-I advice you to take a look at the docs and tweake it to follow your needs.</p>
+<p>Dans notre config nous allons définir un point d&#8217;entrée pour notre proxy (i.e port sur lequel le proxy écoute) et la section du 'provider', docker dans notre cas.
+Je vous conseille de jeter un petit coup d&#8217;oeuil a la documentation et de la modifier en fonction de vos besoins.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -156,18 +158,18 @@ entrypoints:
 </div>
 </div>
 <div class="paragraph">
-<p>Finally you can run traefik by running <code>docker-compose up -d</code> and check that everything is running fine by going to the dashboard at localhost:8888 (or ip_of_the_machine:exposed_port)</p>
+<p>Enfin, nous pouvons maintenant déployer Traefik localement en éxecutant <code>docker-compose up -d</code> et vérifier que tout s&#8217;est bien passé en allant sur le tableau de bord de traefik disponible sur <a href="http://localhost:8080" class="bare">http://localhost:8080</a> (ou ip_of_the_machine:exposed_port si vous utilisez une machine virtuelle).</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_setting_up_our_service">Setting up our service</h2>
+<h2 id="_mise_en_place_de_notre_service">Mise en place de notre service</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The services we&#8217;re gonna setup is : projectSend. I choose it because it is very easy to setup and don&#8217;t require any other external service to work.</p>
+<p>Le service que nous allons déployé ici, est <strong>projectSend</strong>. Je l&#8217;ai choisi parce qu&#8217;il est relativement simple a mettre en place et ne nécessite pas d&#8217;autres services pour fonctionner. C&#8217;est un projet de la fondation Mozilla qui permet d&#8217;envoyer des fichiers d&#8217;une personne a une autre.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll be using this docker-compose.yml (Largely inspired from there: <a href="https://hub.docker.com/r/linuxserver/projectsend" class="bare">https://hub.docker.com/r/linuxserver/projectsend</a>).</p>
+<p>Nous allons utiliser le docker-compose.yml suivant (Grandement inspiré par celui fait par l&#8217;équipe de linuxserver, disponible <a href="https://hub.docker.com/r/linuxserver/projectsend">ici</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -203,49 +205,55 @@ services:
 </div>
 </div>
 <div class="paragraph">
-<p>Okay so you may have noticed that we once again declare the proxy network and attached it the service (it is really important and it is a common mistake to omit it, so be careful).</p>
+<p>Vous avez surement remarqué que nous avons encore une fois déclaré notre réseau 'proxy' et que nous l&#8217;avons attaché a notre service (Il ne faut absolument pas l&#8217;oublier sinon la communication avec Traefik ne se fera pas.).</p>
 </div>
 <div class="paragraph">
-<p>The service is exposed on port 9999. It will be used for debugging purposes since all traffic should go over traefik and be accessible on port 8888.</p>
+<p>Notre service est exposé sur le port 9999 (map 9999:80). Nous allons l&#8217;utiliser pour debug, car l&#8217;ensemble du traffik devrait passer par Traefik et le service devrais être accessible sur le port 8888.</p>
 </div>
 <div class="paragraph">
-<p>Okay now, let&#8217;s take a look at the labels dict. The labels will be used by traefik for proxifying request to the service.
-It is known as Dynamic Configuration in the documentation and more precisely it is the docker Dynamic configuration, the complete reference can be found <a href="https://docs.traefik.io/v2.2/reference/dynamic-configuration/docker/">here</a>.
-In this configuration, we ask traefik to enable the route (since we specified not exposedByDefault in the static configuration above).</p>
+<p>Bon maintenant jettons un oeil aux dictionnaires de labels. Les labels vont permettre à Traefik de proxyfier les requêtes a notre service.
+Ce type de configuration s&#8217;appelle 'Dynamic Configuration' dans la documentation, et plus précisément il s&#8217;agit de configurations dynamique docker.
+La référence complete peut être étudiée <a href="https://docs.traefik.io/v2.2/reference/dynamic-configuration/docker/">ici</a>.</p>
+</div>
+<div class="paragraph">
+<p>Dans cette configuration nous demandons à Traefik d&#8217;activer la route (car nous avons précisé 'exposedByDefault: false' dans la configuration statique ci-dessus).</p>
 </div>
 <div class="ulist">
-<div class="title">Here there is two kind of concepts</div>
+<div class="title">Les deux lignes suivantes représentent deux concepts:</div>
 <ul>
 <li>
-<p>The <a href="https://docs.traefik.io/v2.2/routing/routers/">routers</a>, that configure the way requests are provided to the service</p>
+<p>Les <a href="https://docs.traefik.io/v2.2/routing/routers/">routeurs</a>, qui configurent comment sont traitées et envoyées au service.</p>
 </li>
 <li>
-<p>The <a href="https://docs.traefik.io/v2.2/routing/services/">services</a>, that give information about how the service is hosted and available.</p>
+<p>Les <a href="https://docs.traefik.io/v2.2/routing/services/">services</a>, qui décrivent comment le service est hébergé et par quel moyen il est possible d&#8217;y accéder.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>In our case the configuration is pretty basic, we tell the router called projectsend to listen to traefik http entrypoint (port 8888).
-we tell the router to accept requests based on a rule, in our case either 127.0.0.1 or your host ip.
-And we tell traefik that a service called projectsend listens on port 80 which is container side exposed port. (we do not use port 9999 since this port is open from the host side.)</p>
+<p>Dans notre cas la configuration est plutôt basique, nous disons au routeur appelé 'projectsend' d&#8217;écouter les requêtes provenant du point d&#8217;entrée 'web' (défini plus haut).
+Nous disons ensuite au routeur d&#8217;accepter les requêtes qui repecte une règle, et dans notre cas, toutes les requêtes provenant de 127.0.0.1 ou votre ip.
+Et enfin nous disons a Traefik qu&#8217;un service appelé 'projectsend' écoute sur le port 80, ce qui est le port exposé par notre conteneur (Nous n&#8217;utilisons pas 9999 car ce port est ouvert sur l&#8217;hôte et non dans le conteneur).</p>
 </div>
 <div class="paragraph">
-<p>And that&#8217;s it. With such informations, traefik will be able to forward request comming from traefik:8888 &#8594; projectsend:80.</p>
+<p>Et voila. Avec ces informations Traefik sera capable de transferer les requets venant de traefik:8888 &#8594; projectsend:80.</p>
 </div>
 <div class="paragraph">
-<p>We can run <code>docker-compose up -d</code> and access projectsend from localhost:9999 and localhost:8888 which is traefik.</p>
+<p>Nous pouvons lancer notre conteneur (<code>docker-compose up -d</code>) et accéder a projectsend soit par localhost:9999 ou bien localhost:8888 qui est Traefik</p>
 </div>
 <div class="paragraph">
-<p>Congratulations you have selfhost your first service using traefik !</p>
+<p>Félicitation, vous venez d&#8217;héberger votre premier service en utilisant Traefik !</p>
 </div>
 <div class="paragraph">
-<p>Before doing some crazy things and expose anything on the internet, you must add some security like HTTPS or secured http headers.</p>
+<p>Avant de faire des folies, et de rendre disponible quoi que ce soit sur internet, vous devez ajouter un peu de sécurité a tout ça. En particulier, établir une connection sécurisée, celà est d&#8217;autant plus vrai si vous voulez héberger des sites non statiques.</p>
 </div>
 <div class="paragraph">
-<p>You can find this in the next article of this series : <a href="http://localhost:1313/fr/posts/traefik_series/02_securing_traefik_installation/">Secure your Traefik Installation</a></p>
+<p>Je vous invite a consulter le prochain article de cette série : <a href="https://blog-gh.noki.fr/fr/posts/traefik_series/02_securing_traefik_installation/">Secure your Traefik Installation</a></p>
 </div>
 <div class="paragraph">
-<p>I also suggest you to take a look at the documentation, and doing some experiments locally.</p>
+<p>Je vous suggères également de prendre un peu de temps pour lire la documentation de Traefik, et d&#8217;expérimenter en local dans un premier temps.</p>
+</div>
+<div class="paragraph">
+<p>C&#8217;est tout pour cette article, j&#8217;epère qu&#8217;il était satisfaisant et vous permettera de vous lancer dans l&#8217;auto-hébergement.</p>
 </div>
 </div>
 </div>
@@ -265,8 +273,6 @@ And we tell traefik that a service called projectsend listens on port 80 which i
 				
 				<li><a href="/fr/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/">Utiliser Traefik v2.2 pour auto-héberger votre 1er service.</a></li>
 				
-				<li><a href="/fr/posts/orange_dns_and_accessing_external_services/">Les déboires du DNS de la Livebox 4 Pro, et l&#39;auto-hébergement...</a></li>
-				
 			</ul>
 		</div>
 	</div>
@@ -275,7 +281,7 @@ And we tell traefik that a service called projectsend listens on port 80 which i
 
 	<footer>
 	<span>====================================================================================================</span>
-	<p>&copy; 2020 <a href="http://localhost:1313/"><b>Le Blog de NokiDev</b></a>.
+	<p>&copy; 2020 <a href="https://blog-gh.noki.fr/"><b>Le Blog de NokiDev</b></a>.
 	<a href="https://github.com/NokiDev"><b>Github</b></a>.
 	<a href="https://gitlab.com/NokiDev"><b>Gitlab</b></a>.
 	<a href="https://twitter.com/NokiDev"><b>Twitter</b></a>.

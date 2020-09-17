@@ -50,11 +50,31 @@
   <url>
     <loc>https://blog-gh.noki.fr/en/posts/traefik_series/02_securing_traefik_installation/</loc>
     <lastmod>2020-06-13T01:14:20+02:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="https://blog-gh.noki.fr/fr/posts/traefik_series/02_securing_traefik_installation/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://blog-gh.noki.fr/en/posts/traefik_series/02_securing_traefik_installation/"
+                />
   </url>
   
   <url>
     <loc>https://blog-gh.noki.fr/en/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/</loc>
     <lastmod>2020-06-12T20:29:46+02:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="https://blog-gh.noki.fr/fr/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://blog-gh.noki.fr/en/posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting/"
+                />
   </url>
   
   <url>
