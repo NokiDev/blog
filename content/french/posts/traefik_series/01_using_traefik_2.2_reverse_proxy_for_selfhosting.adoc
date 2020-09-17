@@ -1,22 +1,20 @@
 ---
 title: "Utiliser Traefik v2.2 pour auto-héberger votre 1er service."
 date: 2020-06-12T20:29:46+02:00
-draft: true
-aliases:
-  - /posts/using_traefik_2.2_reverse_proxy_for_selfhosting
+draft: false
 ---
 
-Traefik is a modern reverse proxy that integrates with container technologies and related orchestrators. 
-In our case we're going to use it's docker integration.
-Traefik uses docker socket to retrieve information about running containers, and labels that are attached to it. (if you use docker inspect you would get the idea.)
+Traefik est un reverse proxy moderne, qui s'intègres avec les solutions containeurisées comme docker et kubernetes.
+Pour cette article, nous allons s'intéresser a son intégration avec docker.
+Traefik, utilise le socket docker (local ou distant) pour récupérer des informations a propos des containers déployés sur le systême ainsi que les labels qui lui sont accrochés. (Vous pouvez utiliser docker inspect pour avoir une idée des informations a sa disposition).
 
-**This article requires that you are already familiar with container thechnology and especially docker.**
+**Cette article demande un minimum de connaissances sur les environnements containeurisés et en particulier docker.**
 
-**Disclaimer: This article is not meant to secure your services, it is a pretty basic setup to start with traefik, if you want to secure your services head to the link:{{< ref "02_securing_traefik_installation.adoc" >}}[next article] of this series **
+**Disclaimer: Cette article n'as pas pour but de sécuriser votre installation, mais seulement vous permettre de commencer à utiliser Traefik et déployer un service. Nous verrons ce sujet dans link:{{< ref "02_securing_traefik_installation.adoc" >}}[l'article suivant] de cette série**
 
-== Setting up traefik
+== Mettre en place Traefik
 
-We'll use the following docker-compose.yml file :
+Nous allons commencer en utilisant le docker-compose.yml suivant : (Rappel docker-compose.yml permet de décrire ses containers, a la place de la ligne de commande).
 
 ```yaml
 version: '3.7'
@@ -43,16 +41,16 @@ services:
       - proxy
 ```
 
-As you may have notice there is a network called proxy that is referenced by this file. It is defined as external, because we want other services to use it too, and defining it external allow to create other services before actually deploying this docker-compose file. + if you use docker-compose rm it won't try to remove the network.
+Comme vous pouvez le voir, il y'a un 'network' proxy qui est référencé dans ce fichier. Il est défini en 'external' car nous voulons que d'autres services puissent l'utiliser. Créer le réseau en externe, a un énorme avantage, celui de pouvoir déployer n'importe quel service, sans que le reverse proxy ne soit déployé (i.e docker-compose up), cela empêchera aussi docker-compose de le supprimer, si vous lancez `docker-compose rm`.
 
-To create the proxy network simply call `docker network create proxy`
+Pour créer le réseau 'proxy' c'est simple, il suffit d'executé la commande suivante : `docker network create proxy`
 
-Let's talk about the config volume that is defined too.
-Traefik can be configured either with command line arguments, env variables and configuration file (Called https://docs.traefik.io/v2.2/reference/static-configuration/file/[static configuration] in the documentation), the latter will be used.
-And we will create it now. I prefer the yaml format because it avoids repeating your self between subsections and I'm lazy.
+Parlons maintenant du volume de 'config'.
+Traefik peut être configuré soit par la ligne de commande, soit par des variables d'environnements soit par un fichier de configuration (Appelée https://docs.traefik.io/v2.2/reference/static-configuration/file/[static configuration] dans la documentation). C'est bien cette dernière que nous allons utiliser ici.
+Et nous alons la créer maintenant. Je préfère utiliser le format YAML, parce qu'il évite de se répetter entre les sous sections, et que je suis flemmard.
 
-Our config will need to define one entrypoint and the docker provider section. 
-I advice you to take a look at the docs and tweake it to follow your needs.
+Dans notre config nous allons définir un point d'entrée pour notre proxy (i.e port sur lequel le proxy écoute) et la section du 'provider', docker dans notre cas. 
+Je vous conseille de jeter un petit coup d'oeuil a la documentation et de la modifier en fonction de vos besoins.
 
 ```yaml
 global:
@@ -75,13 +73,14 @@ entrypoints:
 
 ```
 
-Finally you can run traefik by running `docker-compose up -d` and check that everything is running fine by going to the dashboard at localhost:8888 (or ip_of_the_machine:exposed_port)
+Enfin, nous pouvons maintenant déployer Traefik localement en éxecutant `docker-compose up -d` et vérifier que tout s'est bien passé en allant sur le tableau de bord de traefik disponible sur http://localhost:8080 (ou ip_of_the_machine:exposed_port si vous utilisez une machine virtuelle).
 
-== Setting up our service 
+== Mise en place de notre service 
 
-The services we're gonna setup is : projectSend. I choose it because it is very easy to setup and don't require any other external service to work.
+Le service que nous allons déployé ici, est **projectSend**. Je l'ai choisi parce qu'il est relativement simple a mettre en place et ne nécessite pas d'autres services pour fonctionner. C'est un projet de la fondation Mozilla qui permet d'envoyer des fichiers d'une personne a une autre.
 
-We'll be using this docker-compose.yml (Largely inspired from there: https://hub.docker.com/r/linuxserver/projectsend).
+Nous allons utiliser le docker-compose.yml suivant (Grandement inspiré par celui fait par l'équipe de linuxserver, disponible https://hub.docker.com/r/linuxserver/projectsend[ici]).
+
 ```yaml
 version: "3.7"
 
@@ -114,30 +113,34 @@ services:
       traefik.http.services.projectsend.loadbalancer.server.port: 80
 ```
 
-Okay so you may have noticed that we once again declare the proxy network and attached it the service (it is really important and it is a common mistake to omit it, so be careful).
+Vous avez surement remarqué que nous avons encore une fois déclaré notre réseau 'proxy' et que nous l'avons attaché a notre service (Il ne faut absolument pas l'oublier sinon la communication avec Traefik ne se fera pas.).
 
-The service is exposed on port 9999. It will be used for debugging purposes since all traffic should go over traefik and be accessible on port 8888.
+Notre service est exposé sur le port 9999 (map 9999:80). Nous allons l'utiliser pour debug, car l'ensemble du traffik devrait passer par Traefik et le service devrais être accessible sur le port 8888.
 
-Okay now, let's take a look at the labels dict. The labels will be used by traefik for proxifying request to the service. 
-It is known as Dynamic Configuration in the documentation and more precisely it is the docker Dynamic configuration, the complete reference can be found https://docs.traefik.io/v2.2/reference/dynamic-configuration/docker/[here]. 
-In this configuration, we ask traefik to enable the route (since we specified not exposedByDefault in the static configuration above).
+Bon maintenant jettons un oeil aux dictionnaires de labels. Les labels vont permettre à Traefik de proxyfier les requêtes a notre service.
+Ce type de configuration s'appelle 'Dynamic Configuration' dans la documentation, et plus précisément il s'agit de configurations dynamique docker. 
+La référence complete peut être étudiée https://docs.traefik.io/v2.2/reference/dynamic-configuration/docker/[ici].
 
-.Here there is two kind of concepts
-* The https://docs.traefik.io/v2.2/routing/routers/[routers], that configure the way requests are provided to the service
-* The https://docs.traefik.io/v2.2/routing/services/[services], that give information about how the service is hosted and available. 
+Dans cette configuration nous demandons à Traefik d'activer la route (car nous avons précisé 'exposedByDefault: false' dans la configuration statique ci-dessus).
 
-In our case the configuration is pretty basic, we tell the router called projectsend to listen to traefik http entrypoint (port 8888).
-we tell the router to accept requests based on a rule, in our case either 127.0.0.1 or your host ip.
-And we tell traefik that a service called projectsend listens on port 80 which is container side exposed port. (we do not use port 9999 since this port is open from the host side.)
+.Les deux lignes suivantes représentent deux concepts: 
+* Les https://docs.traefik.io/v2.2/routing/routers/[routeurs], qui configurent comment sont traitées et envoyées au service.
+* Les https://docs.traefik.io/v2.2/routing/services/[services], qui décrivent comment le service est hébergé et par quel moyen il est possible d'y accéder.
 
-And that's it. With such informations, traefik will be able to forward request comming from traefik:8888 -> projectsend:80.
+Dans notre cas la configuration est plutôt basique, nous disons au routeur appelé 'projectsend' d'écouter les requêtes provenant du point d'entrée 'web' (défini plus haut). 
+Nous disons ensuite au routeur d'accepter les requêtes qui repecte une règle, et dans notre cas, toutes les requêtes provenant de 127.0.0.1 ou votre ip.
+Et enfin nous disons a Traefik qu'un service appelé 'projectsend' écoute sur le port 80, ce qui est le port exposé par notre conteneur (Nous n'utilisons pas 9999 car ce port est ouvert sur l'hôte et non dans le conteneur).
 
-We can run `docker-compose up -d` and access projectsend from localhost:9999 and localhost:8888 which is traefik.
+Et voila. Avec ces informations Traefik sera capable de transferer les requets venant de traefik:8888 -> projectsend:80.
 
-Congratulations you have selfhost your first service using traefik ! 
+Nous pouvons lancer notre conteneur (`docker-compose up -d`) et accéder a projectsend soit par localhost:9999 ou bien localhost:8888 qui est Traefik
 
-Before doing some crazy things and expose anything on the internet, you must add some security like HTTPS or secured http headers.
+Félicitation, vous venez d'héberger votre premier service en utilisant Traefik !
 
-You can find this in the next article of this series : link:{{< ref "02_securing_traefik_installation.adoc" >}}[Secure your Traefik Installation]
+Avant de faire des folies, et de rendre disponible quoi que ce soit sur internet, vous devez ajouter un peu de sécurité a tout ça. En particulier, établir une connection sécurisée, celà est d'autant plus vrai si vous voulez héberger des sites non statiques. 
 
-I also suggest you to take a look at the documentation, and doing some experiments locally.
+Je vous invite a consulter le prochain article de cette série : link:{{< ref "02_securing_traefik_installation.adoc" >}}[Secure your Traefik Installation]
+
+Je vous suggères également de prendre un peu de temps pour lire la documentation de Traefik, et d'expérimenter en local dans un premier temps.
+
+C'est tout pour cette article, j'epère qu'il était satisfaisant et vous permettera de vous lancer dans l'auto-hébergement. 

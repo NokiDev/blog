@@ -4,13 +4,14 @@ date: 2020-06-13T01:14:20+02:00
 draft: false
 aliases:
     - /posts/securing_traefik_installation
+    - /posts/traefik_series/02_securing_traefik_installation
 ---
 :source-highlighter: highlight.js
 :toc: macro
 
 In this article we will see how to configure traefik to use https and configure middlewares for having a quite good security rank on https://www.ssllabs.com[SSLLabs]. This is mandatory if you plan to exposes your services on the Internet.
 
-This article directly follows link:/posts/using_traefik_2.2_reverse_proxy_for_selfhosting[Using traefik for deploying your first service] and will use docker-compose file definitions we used back then.
+This article directly follows link:{{< ref "01_using_traefik_2.2_reverse_proxy_for_selfhosting.adoc" >}}[Using traefik for deploying your first service] and will use docker-compose file definitions we used back then.
 
 .For this article we will need a few things
 * A domain name

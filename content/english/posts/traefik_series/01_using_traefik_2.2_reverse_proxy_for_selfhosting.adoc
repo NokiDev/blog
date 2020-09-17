@@ -4,6 +4,7 @@ date: 2020-06-12T20:29:46+02:00
 draft: false
 aliases:
   - /posts/using_traefik_2.2_reverse_proxy_for_selfhosting
+  - /posts/traefik_series/01_using_traefik_2.2_reverse_proxy_for_selfhosting
 ---
 
 Traefik is a modern reverse proxy that integrates with container technologies and related orchestrators. 

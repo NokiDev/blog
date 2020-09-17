@@ -1,7 +1,3 @@
-
-
-
-
 # Blog 
 
 Available at https://blog-gh.noki.fr
@@ -25,6 +21,13 @@ git worktree add -B gh-pages public origin/gh-pages
 
 
 ### Basic commands
+
+- Dev Env
+
+```
+hugo server --config config/production_gh/config.yml -d public
+```
+
 
 - Publish 
 ```
